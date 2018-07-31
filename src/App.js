@@ -21,22 +21,28 @@ import HomeIcon from '@material-ui/icons/Home';
 // import Footer from './Footer'
 
 class PrimaryLayout extends Component {
-
-    state = {
-        open: true
-    }
-
+    
     constructor(props) {
         super(props);
     }
 
-    hideDrawer = () => () => {
+    state = {
+        title: '首页',
+        open: false
+    }
+
+    hideDrawer = () => {
         console.log('隐藏内容')
-        this.setState('open', false)
+        console.log(this)
+        this.state.open = false
+    }
+
+    setTitle(title) {
+        // this.setState('title', title)
     }
 
     render() {
-        const {open} = this.state
+        const {open, title} = this.state
 
         return (
             <div className="app">
@@ -46,7 +52,7 @@ class PrimaryLayout extends Component {
                         <IconButton className={this.props.menuButton} color="inherit" aria-label="Menu">
                             <MenuIcon />
                         </IconButton>
-                            <Typography variant="title" color="inherit">关于</Typography>
+                            <Typography variant="title" color="inherit">{ title }</Typography>
                         </Toolbar>
                     </AppBar>
                 </header>
@@ -59,20 +65,17 @@ class PrimaryLayout extends Component {
                 <Drawer
                     anchor="left"
                     open={open}
-                    classes={{
-                        width: 320,
-                    }}
                     onClose={this.hideDrawer}
                     className="page-drawer2"
                     >
                     <List className="list" component="nav">
-                        <ListItem button component={Link} to="/">
+                        <ListItem button component={Link} to="/" onClick={this.setTitle('计算器')}>
                             <ListItemIcon>
                                 <HomeIcon />
                             </ListItemIcon>
                             <ListItemText primary="首页" />
                         </ListItem>
-                        <ListItem button component={Link} to="/calculator">
+                        <ListItem button component={Link} to="/calculator" onClick="setTitle('计算器')">
                             <ListItemIcon>
                                 <DraftsIcon />
                             </ListItemIcon>
