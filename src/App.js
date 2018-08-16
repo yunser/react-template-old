@@ -3,6 +3,7 @@ import { BrowserRouter, Route, Link, Redirect } from 'react-router-dom'
 // page
 import Home from './views/Home'
 import About from './views/About'
+import Article from './views/Article'
 import ArticleDetail from './views/ArticleDetail'
 import MyProfile from './views/MyProfile'
 import MyComment from './views/MyComment'
@@ -89,6 +90,9 @@ class PrimaryLayout extends Component {
                                 <Link to='/'>首页</Link>
                             </li>
                             <li className="item">
+                                <Link to='/articles'>文章</Link>
+                            </li>
+                            <li className="item">
                                 <Link to='/about'>关于</Link>
                             </li>
                         </ul>
@@ -109,7 +113,8 @@ class PrimaryLayout extends Component {
                 <div className="page-body">
                     <Route path="/" exact component={Home} />
                     <Route path="/about" component={About} />
-                    <Route path="/articles/:id" component={ArticleDetail} />
+                    <Route path="/articles" exact component={Article} />
+                    <Route path="/articles/:id" component={ArticleDetail} key={new Date().getTime()} />
                     <Route path="/me/profile" component={MyProfile} />
                     <Route path="/me/comments" component={MyComment} />
                     <Route path="/me/email" component={MyEmail} />

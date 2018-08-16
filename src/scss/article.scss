@@ -119,3 +119,14 @@
         color: #f00;
     }
 }
+
+.breadcrumb-list {
+    display: flex;
+    margin-bottom: 16px;
+    .item {
+        margin-right: 16px;
+    }
+    .active {
+        color: #999;
+    }
+}

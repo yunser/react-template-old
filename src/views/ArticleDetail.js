@@ -10,8 +10,6 @@ class ArticleDetail extends Component {
     constructor(options) {
         super()
 
-        this.articleId = options.match.params.id
-
         this.state = {
             loading: false,
             // 文章
@@ -23,19 +21,37 @@ class ArticleDetail extends Component {
         }
     }
 
+    componentDidMount() {
+        this.articleId = this.props.match.params.id
+        console.log('componentDidMount')
+        this.init()
+    }
+
     componentWillMount() {
         console.log('componentWillMount')
     }
 
-    componentDidMount() {
+    // componentWillReceiveProps(nextProps){
+    //     this.articleId = nextProps.match.params.id
+    //     console.log('componentWillReceiveProps')
+    //     // 当路由切换时跳到页面顶部
+    //     if (this.props.location !== nextProps.location) {
+    //         window.scrollTo(0,0)
+    //     }
+    //     this.init()
+    // }
+
+    init() {
+        console.log('初始化')
+        console.log(this.props)
         document.title = '文章详情'
-        console.log('componentDidMount')
         console.log(http)
         this.getData()
     }
 
     getData() {
         this.loading = true
+        console.log('获取文章详情')
         // 获取文章详情
         let url = `/rest/articles/${this.articleId}`
         http.get(url).then(
@@ -350,13 +366,29 @@ class ArticleDetail extends Component {
                 )}
             </ul>
         )
+
+        // 面包屑导航
+        let Breadcrumb = (
+            <ul className="breadcrumb-list">
+                <li className="item">
+                    <Link className="link" to="/">雷科技</Link>
+                </li>
+                <li className="item">
+                    {/* <Link className="link" to="/">{article.belongCategory}</Link> */}
+                    <Link className="link" to="/">新鲜事</Link>
+                </li>
+                <li className="item active">
+                    正文
+                </li>
+            </ul>
+        )
         return (
-            <div className="page-article-detail">
+            <div className="page-article-detail" ref={node => this.node = node}>
                 <div className="container">
                     {Loading}
                     {article &&
                         <div>
-                            这是面包屑导航
+                            {Breadcrumb}      
                             {Comment}
                             {Article}
                             {RelateArticle}

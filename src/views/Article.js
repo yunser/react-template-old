@@ -2,26 +2,19 @@ import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import http from '../util/http'
 
-class Home extends Component {
+class Article extends Component {
 
-    constructor() {
-        super()
-        
+    constructor(props) {
+        super(props)
+
         this.state = {
-            currentPage: 2,
+            currentPage: 1,
             articles: []
         }
     }
 
     componentDidMount() {
-        document.title = '首页'
-        console.log('http')
-        console.log(http)
         this.getData()
-    }
-
-    test(asd) {
-        alert(asd)
     }
 
     getData() {
@@ -51,7 +44,7 @@ class Home extends Component {
                 console.log(response)
             })
     }
-    
+
     render() {
         const {articles} = this.state
 
@@ -82,13 +75,15 @@ class Home extends Component {
         )
 
         return (
-            <div className="page-home">
+            <div className="page-article">
                 <div className="container">
+                    这是文章页面
                     {ActicleList}
                 </div>
+
             </div>
         )
     }
 }
 
-export default Home
+export default Article
