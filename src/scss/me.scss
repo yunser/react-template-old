@@ -1,0 +1,24 @@
+.page-me {
+    .container {
+        display: flex;
+    }
+}
+.my-nav-list {
+    width: 200px;
+    margin-right: 16px;
+    border: 1px solid #eee;
+    .item {
+        padding: 16px;
+        &:hover {
+            background-color: #f0f0f0;
+        }
+        &.active {
+            color: #fff;
+            background-color: #09c;
+        }
+    }
+    .link {
+        display: block;
+        height: 100%;
+    }
+}
