@@ -61,6 +61,11 @@ class PrimaryLayout extends Component {
         })
     }
 
+    // 清空浏览器缓存
+    clearStorage() {
+        localStorage.clear()
+    }
+
     render() {
         const {loginRegisterVisibale, keyword, redirect} = this.state
 
@@ -89,6 +94,7 @@ class PrimaryLayout extends Component {
                         </ul>
                         <input />
                         <button onClick={this.search.bind(this)}>搜索</button>
+                        <button onClick={this.clearStorage.bind(this)}>清空浏览器缓存</button>
                         <span className="iconfont icon-edit"></span>
                         <span onClick={this.toggleLogin}>登录</span>
                         <span onClick={this.toggleLogin}>注册</span>

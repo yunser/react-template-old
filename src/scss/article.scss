@@ -103,6 +103,11 @@
     .user-name {
         margin-right: 16px;
     }
+    .like {
+        &.active {
+            color: #f00;
+        }    
+    }
 }
 
 .page-article-detail {

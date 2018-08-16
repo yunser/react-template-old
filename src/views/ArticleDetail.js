@@ -69,14 +69,15 @@ class ArticleDetail extends Component {
                 let data = response.data
                 console.log(data)
                 if (data.code !== '200') {
-                    // wx.showToast({
-                    //     title: '获取评论失败',
-                    //     duration: 2000
-                    // })
+                    notify.show('获取评论失败', 'error', 1000)
                     return
                 }
+                let comments = data.data
+                for (let comment of comments) {
+                    comment.isLike = storage.get('comment_like_' + comment.commentId, false)
+                }
                 this.setState({
-                    comments: data.data
+                    comments: comments
                 })
             },
             response => {
@@ -168,6 +169,7 @@ class ArticleDetail extends Component {
 
     // 评论点赞
     likeComment(comment, index) {
+        console.log('评论点赞')
         if (storage.get('comment_like_' + comment.commentId)) {
             notify.show('你已经点过赞了', 'error', 1000)
             return
@@ -182,12 +184,13 @@ class ArticleDetail extends Component {
         }).then(
             response => {
                 let data = response.data
-                if (data.code !== '200') {
+                if (data.code !== 200 && data.code !== '200') {
                     notify.show('点赞失败', 'error', 1000)
                     return
                 }
-                storage.se('comment_like_' + comment.commentId, true)
+                storage.set('comment_like_' + comment.commentId, true)
                 this.state.comments[index].likeTimes++
+                this.state.comments[index].isLike = true
                 this.setState({
                     comments: this.state.comments
                 })
@@ -287,7 +290,11 @@ class ArticleDetail extends Component {
                                     <div className="user-name">{comment.user.userName}</div>
                                     评论{comment.commentTimes}
                                     <div onClick={this.likeComment.bind(this, comment, index)}></div>
-                                    <span className="icon icon-zixun">赞 {comment.likeTimes}</span>
+                                    <span className={classNames('like', {active: comment.isLike})}
+                                        onClick={this.likeComment.bind(this, comment, index)}>
+                                        <i className="icon icon-zixun"></i>
+                                        赞 {comment.likeTimes}
+                                    </span>
                                 </div>
                                 <div className="content">{comment.content}</div>
                                 <div className="time">{comment.updateTime}</div>
