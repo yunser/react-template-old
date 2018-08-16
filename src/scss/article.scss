@@ -130,3 +130,16 @@
         color: #999;
     }
 }
+
+.type-list {
+    display: flex;
+    margin-bottom: 16px;
+    .item {
+        margin-right: 16px;
+        cursor: pointer;
+        &.active {
+            color: #fff;
+            background-color: #f00;
+        }
+    }
+}

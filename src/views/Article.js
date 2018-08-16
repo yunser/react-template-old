@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import http from '../util/http'
+import classNames from 'classnames'
 
 class Article extends Component {
 
@@ -8,6 +9,32 @@ class Article extends Component {
         super(props)
 
         this.state = {
+            // 类型
+            types: [
+                {
+                    name: '精选'
+                },
+                {
+                    name: '新鲜事'
+                },
+                {
+                    name: '涨知识'
+                },
+                {
+                    name: '嘿科技'
+                },
+                {
+                    name: '智能榜'
+                },
+                {
+                    name: '撸评测'
+                },
+                {
+                    name: 'VR专区'
+                }
+            ],
+            currentType: '精选',
+            // 文章
             currentPage: 1,
             articles: []
         }
@@ -19,7 +46,14 @@ class Article extends Component {
 
     getData() {
         console.log('获取数据')
-        let url = `/rest/articles`
+        let colName = this.state.currentType
+        if (this.state.currentType === '精选') {
+            colName = '看点'
+        } else if (this.state.currentType === 'VR专区') {
+            // colName = 'VR资讯,VR装备,VR游戏,VR应用'
+            colName = 'VR资讯'
+        }
+        let url = `/columns/getArticleList`
         http.get(url, {
             params: {
                 ifHome: 1,
@@ -28,7 +62,8 @@ class Article extends Component {
                 pageIndex: this.state.currentPage,
                 pageSize: 20,
                 orderBy: 'postDate',
-                orderType: 'desc'
+                orderType: 'desc',
+                colName: colName
             }
         }).then(
             response => {
@@ -45,8 +80,18 @@ class Article extends Component {
             })
     }
 
+    // 选择文章类型
+    selectType = typeName => {
+        this.setState({
+            currentPage: 1,
+            currentType: typeName
+        }, () => {
+            this.getData()
+        })
+    }
+
     render() {
-        const {articles} = this.state
+        const {articles, types, currentType} = this.state
 
         const ActicleList = (
             <div>
@@ -74,10 +119,22 @@ class Article extends Component {
             </div>
         )
 
+        let Type = (
+            <div className="type-box">
+                <ul className="type-list">
+                    {types.map(type =>
+                        <li className={classNames('item', {active: type.name === currentType})}
+                            onClick={this.selectType.bind(this, type.name)}>
+                            {type.name}
+                        </li>
+                    )}
+                </ul>
+            </div>
+        )
         return (
             <div className="page-article">
                 <div className="container">
-                    这是文章页面
+                    {Type}
                     {ActicleList}
                 </div>
 
