@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import http from '../util/http'
+import Notifications, {notify} from 'react-notify-toast'
 
 class Home extends Component {
 
@@ -85,6 +86,7 @@ class Home extends Component {
             <div className="page-home">
                 <div className="container">
                     {ActicleList}
+                    <Notifications />
                 </div>
             </div>
         )

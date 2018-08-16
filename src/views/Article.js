@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import http from '../util/http'
 import classNames from 'classnames'
+import Notifications, {notify} from 'react-notify-toast'
 
 class Article extends Component {
 
@@ -42,6 +43,32 @@ class Article extends Component {
 
     componentDidMount() {
         this.getData()
+        window.addEventListener('scroll', this.handleScroll = () => {
+            let scrollTop = document.body.scrollTop || document.documentElement.scrollTop
+            console.log(scrollTop)
+            if (window.innerHeight + scrollTop > document.body.scrollHeight - 100) {
+                if (!this.loading) {
+                    this.loading = true
+                    this.loadMore()
+                }
+            }
+            console.log(window.innerHeight + scrollTop, document.body.scrollHeight)
+        })
+    }
+
+    componentWillUnmount() {
+        window.removeEventListener('scroll', this.handleScroll)
+    }
+
+    loadMore() {
+        console.log('加载更多')
+        this.setState({
+            loading: true,
+            currentPage: this.state.currentPage + 1
+        }, () => {
+            this.getData()
+        })
+
     }
 
     getData() {
@@ -69,11 +96,20 @@ class Article extends Component {
             response => {
                 let data = response.data
                 console.log(data)
-                if (data.code === '200') {
-                    this.setState({
-                        articles: data.data
-                    })
+                if (data.code !== '200') {
+                    notify.show('获取文章失败', 'error', 1000)
+                    return
                 }
+                let articles = []
+                if (this.state.currentPage === 1) {
+                    articles = data.data
+                } else {
+                    articles = this.state.articles.concat(data.data)
+                }
+                this.setState({
+                    articles: articles
+                })
+                this.loading = false
             },
             response => {
                 console.log(response)
@@ -124,6 +160,7 @@ class Article extends Component {
                 <ul className="type-list">
                     {types.map(type =>
                         <li className={classNames('item', {active: type.name === currentType})}
+                            key={type.name}
                             onClick={this.selectType.bind(this, type.name)}>
                             {type.name}
                         </li>

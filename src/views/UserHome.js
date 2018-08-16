@@ -25,6 +25,7 @@ class UserHome extends Component {
             let scrollTop = document.body.scrollTop || document.documentElement.scrollTop
             console.log(scrollTop)
             if (window.innerHeight + scrollTop > document.body.scrollHeight - 100) {
+                console.log(this.loading)
                 if (!this.loading) {
                     this.loading = true
                     this.loadMore()
@@ -38,16 +39,16 @@ class UserHome extends Component {
         window.removeEventListener('scroll', this.handleScroll)
     }
 
-    handleScroll() {
-        console.log('浏览器滚动事件')
-        let scrollTop = document.body.scrollTop || document.documentElement.scrollTop
+    // handleScroll() {
+    //     console.log('浏览器滚动事件')
+    //     let scrollTop = document.body.scrollTop || document.documentElement.scrollTop
 
-        console.log(scrollTop)
-        if (window.innerHeight + scrollTop > document.body.scrollHeight - 200) {
-            this.loadMore()
-        }
-        console.log(window.innerHeight + scrollTop, document.body.scrollHeight)
-    }
+    //     console.log(scrollTop)
+    //     if (window.innerHeight + scrollTop > document.body.scrollHeight - 200) {
+    //         this.loadMore()
+    //     }
+    //     console.log(window.innerHeight + scrollTop, document.body.scrollHeight)
+    // }
 
     loadMore() {
         console.log('加载更多')
