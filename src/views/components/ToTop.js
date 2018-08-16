@@ -3,12 +3,15 @@ import { Link } from 'react-router-dom'
 
 class ToTop extends Component {
 
-    ToTop() {
-        // document.body.scrollTop = 0
-        // document.body.scrollTo = 0
-        console.log(document.body.scrollTop)
-        // document.documentElement.scrollTop = 0
+    constructor() {
+        super()
         
+        this.state = {
+            show: false
+        }
+    }
+
+    ToTop() {
         let timer = setInterval(() => {
             document.documentElement.scrollTop -= 60
             if (document.documentElement.scrollTop === 0) {
@@ -17,10 +20,36 @@ class ToTop extends Component {
         }, 10)
     }
 
+    componentDidMount() {
+        window.addEventListener('scroll', this.handleScroll = () => {
+            let scrollTop = document.body.scrollTop || document.documentElement.scrollTop
+            console.log('顶部' + scrollTop)
+            if (scrollTop > 500) {
+                this.setState({
+                    show: true
+                })
+            } else {
+                this.setState({
+                    show: false
+                })
+            }
+        })
+    }
+
+    componentWillUnmount() {
+        window.removeEventListener('scroll', this.handleScroll)
+    }
+
     render() {
-        return (
-            <div className="to-top" onClick={this.ToTop}></div>
-        )
+        const {show} = this.state
+
+        let ret = null
+        if (show) {
+            ret = (
+                <div className="to-top" onClick={this.ToTop}></div>
+            ) 
+        }
+        return ret
     }
 }
 
