@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { BrowserRouter, Route, Link, Redirect } from 'react-router-dom'
+import { BrowserRouter, Route, Link, Redirect, Switch } from 'react-router-dom'
 // page
 import Home from './views/Home'
 import About from './views/About'
@@ -108,6 +108,9 @@ class PrimaryLayout extends Component {
                             <li className="item">
                                 <Link to='/about'>关于</Link>
                             </li>
+                            <li className="item">
+                                <Link to='/test404'>404 测试</Link>
+                            </li>
                         </ul>
                         <input placeholder='关键词' value={this.state.keyword} onInput={this.handleInputChange.bind(this)} />
                         {/* <button onClick={this.search.bind(this)}>搜索</button> */}
@@ -125,18 +128,22 @@ class PrimaryLayout extends Component {
                     </div>
                 </header>
                 <div className="page-body">
-                    <Route path="/" exact component={Home} />
-                    <Route path="/about" component={About} />
-                    <Route path="/articles" exact component={Article} />
-                    <Route path="/articles/:id" component={ArticleDetail} key={new Date().getTime()} />
-                    <Route path="/me/profile" component={MyProfile} />
-                    <Route path="/me/comments" component={MyComment} />
-                    <Route path="/me/email" component={MyEmail} />
-                    <Route path="/me/password" component={MyPassword} />
-                    <Route path="/me/messages" component={MyMessage} />
-                    <Route path="/users/:id" component={UserHome} />
-                    <Route path="/search" component={Search} />
-                    {/* <Route path="*" component={Error404} /> */}
+                    <Switch>
+                        <Route path="/" exact component={Home} />
+                        <Route path="/about" component={About} />
+                        <Route path="/articles" exact component={Article} />
+                        <Route path="/articles/:id" component={ArticleDetail} key={new Date().getTime()} />
+                        <Route path="/me/profile" component={MyProfile} />
+                        <Route path="/me/comments" component={MyComment} />
+                        <Route path="/me/email" component={MyEmail} />
+                        <Route path="/me/password" component={MyPassword} />
+                        <Route path="/me/messages" component={MyMessage} />
+                        <Route path="/users/:id" component={UserHome} />
+                        <Route path="/search" component={Search} />
+                        <Route path="*" exact component={Error404} />
+                        {/* <Route path='/404' component={NotFoundPage} /> */}
+                        {/* <Redirect from='*' to='/404' /> */}
+                    </Switch>
                 </div>
                 <footer className="page-footer">
                     <div className="container">

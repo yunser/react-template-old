@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, Redirect } from 'react-router-dom'
 import http from '../util/http'
 import storage from '../util/storage'
 import Notifications, {notify} from 'react-notify-toast'
@@ -13,6 +13,7 @@ class ArticleDetail extends Component {
         this.state = {
             loading: false,
             // 文章
+            isNotFound: false,
             article: null,
             relateArticles: [],
             playArticles: [],
@@ -61,11 +62,18 @@ class ArticleDetail extends Component {
                 console.log(data)
                 let article = data.data
                 article.isLike = storage.get('article_like_' + article.id)
-                if (data.code === '200') {
+                if (data.code !== '200') {
+                    notify.show('获取文章详情失败', 'error', 1000)
+                    return
+                }
+                if (!data.data.title) {
                     this.setState({
-                        article: data.data
+                        isNotFound: true
                     })
                 }
+                this.setState({
+                    article: data.data
+                })
                 this.loading = false
             },
             response => {
@@ -312,6 +320,9 @@ class ArticleDetail extends Component {
     render() {
         const {loading, comments, article, relateArticles, playArticles} = this.state
 
+        if (this.state.isNotFound) {
+            return <Redirect from='*' to='/404' />
+        }
         // 加载中
         let Loading = null
         if (loading) {
