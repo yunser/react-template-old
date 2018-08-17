@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import http from '../util/http'
 import util from '../util/index'
+import Notifications, {notify} from 'react-notify-toast'
 
 class Search extends Component {
 
@@ -16,7 +17,8 @@ class Search extends Component {
     }
 
     state = {
-        loading: true,
+        loading: false,
+        total: 0,
         title: '首页',
         currentPage: 1,
         articles: [],
@@ -67,28 +69,35 @@ class Search extends Component {
 
     getData() {
         console.log('加载数据')
+        this.setState({
+            loading: true
+        })
         http.get(`/search`, {
             params: {
                 pageIndex: this.state.currentPage,
                 pageSize: 10,
-                keyword: this.keyword
+                keyword: this.keyword,
+                type: 'json'
             }
         }).then(
             response => {
                 let data = response.data
                 console.log(data)
-                if (data.code === '200') {
-                    let articles = []
-                    if (this.state.currentPage === 1) {
-                        articles = data.data
-                    } else {
-                        articles = this.state.articles.concat(data.data)
-                    }
-                    this.setState({
-                        articles: articles
-                    })
+                if (data.code !== 200) {
+                    notify.show('请求搜索结果失败', 'error', 1000)
+                    return
                 }
-                this.loading = false
+                let articles = []
+                if (this.state.currentPage === 1) {
+                    articles = data.data.items
+                } else {
+                    articles = this.state.articles.concat(data.data.items)
+                }
+                this.setState({
+                    loading: false,
+                    articles: articles,
+                    total: data.data.total
+                })
             },
             response => {
                 console.log(response)
@@ -103,18 +112,20 @@ class Search extends Component {
     }
 
     render() {
-        let {articles, type, loading} = this.state
+        let {articles, type, loading, total} = this.state
 
         const ActicleList = (
             <div>
-                <ul className="user-article-list">
+                <div>共 {total} 条结果</div>
+                <ul className="search-article-list">
                     {articles.map(article =>
-                        <div className="item" key={article.onlyUrl}>
-                            <Link className="link" to={'/articles/' + article.onlyUrl}>
-                                <div className="img-box" style={{backgroundImage: `url("${article.picUrl}")`, backgroundSize: 'cover'}}>
+                        <div className="item" key={article.id}>
+                            <Link className="link" to={'/articles/' + article.id}>
+                                <div className="img-box" style={{backgroundImage: `url("${article.pic_url}")`, backgroundSize: 'cover'}}>
                                     {/* <img className="img" src={article.picUrl} /> */}
                                 </div>
-                                <h3 className="title"><Link to={'/articles/' + article.onlyUrl}>{article.title}</Link></h3>
+                                <h3 className="title"><Link to={'/articles/' + article.id}>{article.title}</Link></h3>
+                                <div>{article.introduction}</div>
                             </Link>
                         </div>
                     )}
@@ -140,6 +151,7 @@ class Search extends Component {
                         }
                     </div>
                 </div>
+                <Notifications />
             </div>
         )
     }
