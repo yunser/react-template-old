@@ -15,6 +15,7 @@ import Error404 from './views/Error404'
 import Login from './views/Login'
 import Search from './views/Search'
 import ToTop from './views/components/ToTop'
+import Notifications, {notify} from 'react-notify-toast'
 
 // ui
 // import MenuIcon from '@material-ui/icons/Menu';
@@ -55,7 +56,18 @@ class PrimaryLayout extends Component {
 
     }
 
+    // 关键词输入
+    handleInputChange(e) {
+        this.setState({
+            keyword: e.target.value
+        })
+    }
+
     search() {
+        if (!this.state.keyword) {
+            notify.show('请输入关键词', 'error', 1000)
+            return
+        }
         console.log(this.router)
         this.setState({
             redirect: true
@@ -70,6 +82,7 @@ class PrimaryLayout extends Component {
     render() {
         const {loginRegisterVisibale, keyword, redirect} = this.state
 
+        
         if (redirect) {
             return <Redirect push to={'/search?keyword=' + keyword} />
         }
@@ -96,8 +109,9 @@ class PrimaryLayout extends Component {
                                 <Link to='/about'>关于</Link>
                             </li>
                         </ul>
-                        <input />
-                        <button onClick={this.search.bind(this)}>搜索</button>
+                        <input placeholder='关键词' value={this.state.keyword} onInput={this.handleInputChange.bind(this)} />
+                        {/* <button onClick={this.search.bind(this)}>搜索</button> */}
+                        <Link to={'/search?keyword=' + this.state.keyword}>搜索</Link>
                         <button onClick={this.clearStorage.bind(this)}>清空浏览器缓存</button>
                         <span className="iconfont icon-edit"></span>
                         <span onClick={this.toggleLogin}>登录</span>
@@ -138,6 +152,7 @@ class PrimaryLayout extends Component {
                 </footer>
                 {/* <Login /> */}
                 <ToTop />
+                <Notifications />
             </div>
         )
     }

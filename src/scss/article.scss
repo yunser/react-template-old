@@ -83,6 +83,26 @@
     }
 }
 
+.play-article-list {
+    width: 675px;
+    .item {
+        height: 200px;
+    }
+    .link {
+        display: flex;
+        // display: block;
+        width: 100%;
+    }
+    .img {
+        width: 100px;
+        height: 64px;
+        margin-right: 16px;
+    }
+    .title {
+        width: 100px;
+    }
+}
+
 .comment-list {
     border: 1px solid #eee;
     .item {
@@ -111,7 +131,15 @@
 }
 
 .page-article-detail {
-
+    .container {
+        display: flex;
+    }
+    .page-main {
+        width: 675px;
+    }
+    .page-side {
+        margin-left: 24px;
+    }
 }
 
 .article-like {

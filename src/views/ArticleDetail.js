@@ -15,6 +15,7 @@ class ArticleDetail extends Component {
             // 文章
             article: null,
             relateArticles: [],
+            playArticles: [],
             // 评论
             comments: [],
             inputComment: ''
@@ -115,6 +116,35 @@ class ArticleDetail extends Component {
                 if (data.code === '200') {
                     this.setState({
                         relateArticles: data.data
+                    })
+                }
+                this.loading = false
+            },
+            response => {
+                console.log(response)
+                this.loading = false
+            })
+        // 获取你可能感兴趣的文章
+        http.get(`/s/getPlayArticles`, {
+            params: {
+                excludeArticleId: this.articleId,
+                excludedType: '快讯',
+                belongCategory: '嘿科技',
+                channels: 1,
+                ifHome: 1,
+                orderType: 'desc',
+                orderBy: 'postDate',
+                pageIndex: 1,
+                pageSize: 5,
+                status: 1
+            }
+        }).then(
+            response => {
+                let data = response.data
+                console.log(data)
+                if (data.code === '200') {
+                    this.setState({
+                        playArticles: data.data
                     })
                 }
                 this.loading = false
@@ -280,7 +310,7 @@ class ArticleDetail extends Component {
     }
 
     render() {
-        const {loading, comments, article, relateArticles} = this.state
+        const {loading, comments, article, relateArticles, playArticles} = this.state
 
         // 加载中
         let Loading = null
@@ -384,16 +414,31 @@ class ArticleDetail extends Component {
         )
         return (
             <div className="page-article-detail" ref={node => this.node = node}>
+                {Loading}
                 <div className="container">
-                    {Loading}
-                    {article &&
-                        <div>
-                            {Breadcrumb}      
-                            {Comment}
-                            {Article}
-                            {RelateArticle}
-                        </div>
-                    }
+                    <div className="page-main">
+                        {article &&
+                            <div>
+                                {Breadcrumb}      
+                                {Comment}
+                                {Article}
+                                {RelateArticle}
+                            </div>
+                        }
+                    </div>
+                    <div className="page-side">
+                        你可能也感兴趣
+                        <ul className="play-article-list">
+                            {playArticles.map(article =>
+                                <li className="item" key={article.articleId}>
+                                    <Link className="link" to={'/articles/' + article.articleId}>
+                                        <img className="img" src={article.picUrl} />
+                                        <h3 className="title">{article.title}</h3>
+                                    </Link>
+                                </li>
+                            )}
+                        </ul>
+                    </div>
                 </div>
                 <Notifications />
             </div>
